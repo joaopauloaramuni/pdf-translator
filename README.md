@@ -286,7 +286,7 @@ Se você estiver utilizando **Docker**, o `render.yaml` **não é necessário**.
 - Executa o build da imagem
 - Inicia o container
 
-### ✅ Quando usar cada um?
+#### ✅ Quando usar cada um?
 
 - **Apenas Dockerfile:** suficiente para a maioria dos casos (mais simples)
 - **render.yaml:** útil quando você quer:
