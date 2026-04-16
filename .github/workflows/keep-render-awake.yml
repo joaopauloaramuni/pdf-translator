@@ -2,7 +2,7 @@ name: Keep Render Awake
 
 on:
   schedule:
-    - cron: "*/15 * * * *"  # a cada 15 minutos
+    - cron: "*/10 * * * *"  # a cada 10 minutos
   workflow_dispatch:
 
 jobs:
@@ -10,6 +10,17 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Ping Render App
+      - name: Ping Render App with retry
         run: |
-          curl -s https://pdf-translator-02hl.onrender.com/ > /dev/null
+          for i in 1 2 3; do
+            STATUS=$(curl -s -o /dev/null -w "%{http_code}" --max-time 60 https://pdf-translator-02hl.onrender.com/)
+            echo "Tentativa $i - Status: $STATUS"
+            if [ "$STATUS" = "200" ]; then
+              echo "App acordado com sucesso!"
+              exit 0
+            fi
+            echo "Aguardando 20s antes de tentar novamente..."
+            sleep 20
+          done
+          echo "App não respondeu após 3 tentativas"
+          exit 1
